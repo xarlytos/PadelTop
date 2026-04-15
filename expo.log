@@ -1,0 +1,34 @@
+Starting project at C:\Users\carlo\Desktop\App de Pádel Profesional
+Starting Metro Bundler
+Waiting on http://localhost:8081
+Logs for your project will appear below.
+iOS .\index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+ WARN  The package C:\Users\carlo\Desktop\App de Pádel Profesional\node_modules\use-latest-callback contains an invalid package.json configuration. Consider raising this issue with the package maintainer(s).
+Reason: The resolution for "C:\Users\carlo\Desktop\App de Pádel Profesional\node_modules\use-latest-callback" defined in "exports" is C:\Users\carlo\Desktop\App de Pádel Profesional\node_modules\use-latest-callback\esm.mjs, however this file does not exist. Falling back to file-based resolution.
+ WARN  The package C:\Users\carlo\Desktop\App de Pádel Profesional\node_modules\use-latest-callback contains an invalid package.json configuration. Consider raising this issue with the package maintainer(s).
+Reason: The resolution for "C:\Users\carlo\Desktop\App de Pádel Profesional\node_modules\use-latest-callback" defined in "exports" is C:\Users\carlo\Desktop\App de Pádel Profesional\node_modules\use-latest-callback\esm.mjs, however this file does not exist. Falling back to file-based resolution.
+ WARN  The package C:\Users\carlo\Desktop\App de Pádel Profesional\node_modules\use-latest-callback contains an invalid package.json configuration. Consider raising this issue with the package maintainer(s).
+Reason: The resolution for "C:\Users\carlo\Desktop\App de Pádel Profesional\node_modules\use-latest-callback" defined in "exports" is C:\Users\carlo\Desktop\App de Pádel Profesional\node_modules\use-latest-callback\esm.mjs, however this file does not exist. Falling back to file-based resolution.
+iOS Bundled 1454ms index.ts (2935 modules)
+› Detected a change in metro.config.js. Restart the server to see the new results.
+C:\Users\carlo\Desktop\App de Pádel Profesional\node_modules\expo\node_modules\@expo\cli\build\src\utils\errors.js:130
+    throw error;
+    ^
+
+Error: ENOENT: no such file or directory, watch 'C:\Users\carlo\Desktop\App de Pádel Profesional\node_modules\lightningcss-android-arm64'
+    at FSWatcher.<computed> (node:internal/fs/watchers:254:19)
+    at Object.watch (node:fs:2549:36)
+    at FallbackWatcher._watchdir (C:\Users\carlo\Desktop\App de Pádel Profesional\node_modules\metro-file-map\src\watchers\FallbackWatcher.js:119:33)
+    at C:\Users\carlo\Desktop\App de Pádel Profesional\node_modules\metro-file-map\src\watchers\FallbackWatcher.js:219:22
+    at Walker.<anonymous> (C:\Users\carlo\Desktop\App de Pádel Profesional\node_modules\metro-file-map\src\watchers\FallbackWatcher.js:358:5)
+    at Walker.emit (node:events:519:28)
+    at C:\Users\carlo\Desktop\App de Pádel Profesional\node_modules\walker\lib\walker.js:69:16
+    at FSReqCallback.oncomplete (node:fs:187:23) {
+  errno: -4058,
+  syscall: 'watch',
+  code: 'ENOENT',
+  path: 'C:\\Users\\carlo\\Desktop\\App de Pádel Profesional\\node_modules\\lightningcss-android-arm64',
+  filename: 'C:\\Users\\carlo\\Desktop\\App de Pádel Profesional\\node_modules\\lightningcss-android-arm64'
+}
+
+Node.js v22.20.0
