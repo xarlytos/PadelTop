@@ -416,7 +416,7 @@ function parseLocalDate(dateInput: unknown): Date {
   return new Date(year, month - 1, day);
 }
 
-function inferStatusFromDates(startDate?: string, endDate?: string): string {
+function inferStatusFromDates(startDate?: string, endDate?: string): 'ongoing' | 'upcoming' | 'finished' {
   if (!startDate || !endDate) return 'upcoming';
   const now = new Date();
   const start = parseLocalDate(startDate);
