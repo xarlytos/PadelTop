@@ -1,17 +1,8 @@
 import { Router } from 'express';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabase } from '../services/db-client';
 import { requireAuth, AuthenticatedRequest } from '../middleware/auth';
 
 const router = Router();
-
-function getSupabase() {
-  const supabaseUrl = process.env.SUPABASE_URL || '';
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
-  if (!supabaseUrl || !supabaseServiceKey) {
-    throw new Error('SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be set');
-  }
-  return createClient(supabaseUrl, supabaseServiceKey);
-}
 
 const MAX_FREE_FAVORITES = 2;
 
@@ -34,16 +25,27 @@ router.post('/', requireAuth, async (req: AuthenticatedRequest, res) => {
   try {
     const { player_id, player_name, player_avatar_url, notify_match_start, notify_score_changes } = req.body;
 
-    const { count, error: countError } = await getSupabase()
-      .from('favorites')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', req.user.id);
+    // Check if user is premium
+    const { data: profile, error: profileError } = await getSupabase()
+      .from('profiles')
+      .select('is_premium')
+      .eq('id', req.user.id)
+      .single();
 
-    if (countError) throw countError;
+    if (profileError) throw profileError;
 
-    if ((count || 0) >= MAX_FREE_FAVORITES) {
-      res.status(403).json({ error: 'Free plan limit reached', limit: MAX_FREE_FAVORITES });
-      return;
+    if (!(profile as any)?.is_premium) {
+      const { count, error: countError } = await getSupabase()
+        .from('favorites')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', req.user.id);
+
+      if (countError) throw countError;
+
+      if ((count || 0) >= MAX_FREE_FAVORITES) {
+        res.status(403).json({ error: 'Free plan limit reached', limit: MAX_FREE_FAVORITES });
+        return;
+      }
     }
 
     const { data, error } = await getSupabase()
@@ -55,7 +57,7 @@ router.post('/', requireAuth, async (req: AuthenticatedRequest, res) => {
         player_avatar_url,
         notify_match_start: notify_match_start ?? true,
         notify_score_changes: notify_score_changes ?? true,
-      })
+      } as any)
       .select()
       .single();
 
@@ -78,6 +80,30 @@ router.delete('/:playerId', requireAuth, async (req: AuthenticatedRequest, res) 
     res.status(204).send();
   } catch (err: any) {
     res.status(500).json({ error: err.message || 'Failed to remove favorite' });
+  }
+});
+
+router.patch('/notifications', requireAuth, async (req: AuthenticatedRequest, res) => {
+  try {
+    const { notify_match_start, notify_score_changes } = req.body;
+    const updates: any = {};
+    if (typeof notify_match_start === 'boolean') updates.notify_match_start = notify_match_start;
+    if (typeof notify_score_changes === 'boolean') updates.notify_score_changes = notify_score_changes;
+
+    if (Object.keys(updates).length === 0) {
+      res.status(400).json({ error: 'No valid fields to update' });
+      return;
+    }
+
+    const { error } = await getSupabase()
+      .from('favorites')
+      .update(updates as never)
+      .eq('user_id', req.user.id);
+
+    if (error) throw error;
+    res.json({ success: true });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message || 'Failed to update notification preferences' });
   }
 });
 
